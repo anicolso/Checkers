@@ -50,38 +50,35 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 	//How Player system will work
-			var play1, play2;
-			var tempplayer1, tempplayer2,player1,player2;
-			var pieces1 = 12;
-			var pieces2 = 12;
-			$(document).ready(function()
-			{
-				tempplayer1 = prompt("Enter Player 1: ", "your name here");
-				while(tempplayer1===null)
-				{	
-					window.alert("Please Enter a Name");
-					tempplayer1 = prompt("Enter Player 1: ", "your name here");
-				}
-				player1=tempplayer1;
-				
-				tempplayer2 = prompt("Enter Player 2: ", "your name here");
-				while(tempplayer2===null)
-				{
-					window.alert("Please Enter a Name");
-					tempplayer2 = prompt("Enter Player 2: ", "your name here");
-				}
-				player2=tempplayer2;
-				
-				$("#players1").html(player1+" is "+"<img src= 'red.gif'/>");
-				$("#players2").html(player2+" is "+"<img src= 'blue.png'/>");
-				play1 = true;
-				play2 = false;
-				$("#here").html(player1 + "'s turn");
-				Board();
-			});
+	var play1, play2;
+	var tempplayer1, tempplayer2,player1,player2;
+	var pieces1 = 12;
+	var pieces2 = 12;
+	$(document).ready(function()
+	{
+		tempplayer1 = prompt("Enter Player 1: ", "your name here");
+		while(tempplayer1===null)
+		{	
+			window.alert("Please Enter a Name");
+			tempplayer1 = prompt("Enter Player 1: ", "your name here");
+		}
+		player1=tempplayer1;
 
-
-
+		tempplayer2 = prompt("Enter Player 2: ", "your name here");
+		while(tempplayer2===null)
+		{
+			window.alert("Please Enter a Name");
+			tempplayer2 = prompt("Enter Player 2: ", "your name here");
+		}
+		player2=tempplayer2;
+		
+		$("#players1").html(player1+" is "+"<img src= 'red.gif'/>");
+		$("#players2").html(player2+" is "+"<img src= 'blue.png'/>");
+		play1 = true;
+		play2 = false;
+		$("#here").html(player1 + "'s turn");
+		Board();
+	});
 
 //Initial Board
 	var board;
@@ -89,81 +86,54 @@
 		board = [];
 		for (var i = 0; i <= 7; i++)
 		{
-		    board[i] = [];
-			for (var j = 0; j <= 7; j++)	
-			{
-
-
-
-
-			 // 1 = orange, 0 = empty, -1 = blue, 2 = blue king, 3 = orange king
-		
-			if(i <= 2)
-				{
-					if(i % 2 === 0 && j % 2 === 0)
-						board[i][j] = 1; 
-			
-					if(i % 2 !== 0 && j % 2 === 0)
-						board[i][j] = 0;
-			
-					if(i % 2 === 0 && j % 2 !== 0)
-						board[i][j] = 0;
-			
-					if(i % 2 !== 0 && j % 2 !== 0)
-						board[i][j] = 1;
-				}
-
-
-
-
-				else if(i >= 5)
-				{
-					if(i % 2 === 0 && j % 2 === 0)
-						board[i][j] = -1;
-			
-					if(i % 2 === 0 && j % 2 !== 0)
-						board[i][j] = 0;
-				
-					if(i % 2 !== 0 && j % 2 === 0)
-						board[i][j] = 0;
-			
-					if(i % 2 !== 0 && j % 2 !== 0)
-						board[i][j] = -1;
-				}
-				else
+	    	    board[i] = [];
+		    for (var j = 0; j <= 7; j++)	
+		    {
+	   	    	// 1 = orange, 0 = empty, -1 = blue, 2 = blue king, 3 = orange king		
+			if(i <= 2){
+				if(i % 2 === 0 && j % 2 === 0)
+					board[i][j] = 1; 
+				if(i % 2 !== 0 && j % 2 === 0)
 					board[i][j] = 0;
+				if(i % 2 === 0 && j % 2 !== 0)
+					board[i][j] = 0;
+				if(i % 2 !== 0 && j % 2 !== 0)
+					board[i][j] = 1;
+			}
+			else if(i >= 5){
+				if(i % 2 === 0 && j % 2 === 0)
+					board[i][j] = -1;
+				if(i % 2 === 0 && j % 2 !== 0)
+					board[i][j] = 0;		
+				if(i % 2 !== 0 && j % 2 === 0)
+					board[i][j] = 0;		
+				if(i % 2 !== 0 && j % 2 !== 0)
+					board[i][j] = -1;
+			}
+			else{
+				board[i][j] = 0;
 			}
 		}
 	}
 
+	//Actual Movement of Pieces
+	var val = "-2";
+	var a, b;
+	var jumpAgain = false;
+	var flag;
+	var eliminate1, eliminate2, eliminate3, eliminate4;
 
-
-
-//Actual Movement of Pieces
-var val = "-2";
-var a, b;
-var jumpAgain = false;
-var flag;
-var eliminate1, eliminate2, eliminate3, eliminate4;
-
-
-
-
-/*
+	/*
 	eliminate1, eliminate2 are for standard pieces and king pieces (forward movement)
 	eliminate3, eliminate4 are for king pieces (backward movement)
 	flag shows whether a piece will move or not
-*/
-
+	*/
 
 	function start(x,y)
 	{
 		var i = x.toString();
 		var j = y.toString();
 		var tot = i + j;        //Identifies space id
-
-
-
 
 		//Handles selecting and de-selecting spaces
 		//val is the old space of a piece
@@ -178,10 +148,10 @@ var eliminate1, eliminate2, eliminate3, eliminate4;
 			{
 				if((play1 && board[x][y] == 1) || (play2 && board[x][y] == -1) || (play1 && board[x][y] == 3) || (play2 && board[x][y] == 2))
 				{
-						a = x;
-						b = y;
-						document.getElementById(tot).style.background="black";
-						val = tot;
+					a = x;
+					b = y;
+					document.getElementById(tot).style.background="black";
+					val = tot;
 				}
 			}
 		}
@@ -200,8 +170,7 @@ var eliminate1, eliminate2, eliminate3, eliminate4;
 						document.getElementById(tot).innerHTML="<img src= 'red.gif'/>";
 						document.getElementById(val).innerHTML="";
 						board[x][y] = 1;
-						board[a][b] = 0;
-						
+						board[a][b] = 0;					
 							
 						if(eliminate1)
 						{
@@ -217,18 +186,17 @@ var eliminate1, eliminate2, eliminate3, eliminate4;
 							pieces2 -= 1;
 							check(x,y);	
 						}
-                        else
-                        {
-                            jumpAgain = false;
-                        }
-                        console.log(jumpAgain);
-                        if(!jumpAgain)
-                        {
-                            play2 = true;
-				            play1 = false;
-                        }
-					}
-					
+	                        		else
+        	                		{
+                	            			jumpAgain = false;
+                        			}
+						console.log(jumpAgain);
+						if(!jumpAgain)
+						{
+							play2 = true;
+							play1 = false;
+						}
+					}		
 					else if(board[a][b] == -1)
 					{
 						document.getElementById(tot).innerHTML="<img src= 'blue.png'/>";
@@ -250,221 +218,211 @@ var eliminate1, eliminate2, eliminate3, eliminate4;
 							pieces1 -= 1;
 							check(x,y);	
 						}
-                        else
-                        {
-                            jumpAgain = false;
-                        }
-                        console.log(jumpAgain);
-                        if(!jumpAgain)
-                        {
-                            play1 = true;
-				            play2 = false;
-                        }
-					}
+                        		else
+                        		{
+                            			jumpAgain = false;
+                        		}
+                        		console.log(jumpAgain);
+                        		if(!jumpAgain)
+                        		{
+                            			play1 = true;
+				                play2 = false;
+                        		}
+				}			
+				else if(board[a][b] == 2)
+				{
+					document.getElementById(tot).innerHTML="<img src= 'blueking.png'/>";
+					document.getElementById(val).innerHTML="";
+					board[x][y] = 2;
+					board[a][b] = 0;
 							
-					else if(board[a][b] == 2)
-					{
-						document.getElementById(tot).innerHTML="<img src= 'blueking.png'/>";
-						document.getElementById(val).innerHTML="";
-						board[x][y] = 2;
-						board[a][b] = 0;
-							
-                        console.log("elim 1: " + eliminate1);
-                        console.log("elim 2: " + eliminate2);
-                        console.log("elim 3: " + eliminate3);
-                        console.log("elim 4: " + eliminate4);
+         	        	       	console.log("elim 1: " + eliminate1);
+                	        	console.log("elim 2: " + eliminate2);
+                        		console.log("elim 3: " + eliminate3);
+                        		console.log("elim 4: " + eliminate4);
                         
-						if(eliminate1)
-						{
-							document.getElementById((x-1).toString() + (y-1).toString()).innerHTML="";
-							board[x-1][y-1] = 0;
-							pieces1 -= 1;
-							check(x,y);	
-						}
-						else if(eliminate2)
-						{
-							document.getElementById((x-1).toString() + (y+1).toString()).innerHTML="";
-							board[x-1][y+1] = 0;
-							pieces1 -= 1;
-							check(x,y);	
-						}
-						else if(eliminate3)
-						{
-							document.getElementById((x+1).toString() + (y-1).toString()).innerHTML="";
-							board[x+1][y-1] = 0;
-							pieces1 -= 1;
-							check(x,y);	
-						}
-						else if(eliminate4)
-						{
-							document.getElementById((x+1).toString() + (y+1).toString()).innerHTML="";
-							board[x+1][y+1] = 0;
-							pieces1 -= 1;
-							check(x,y);	
-						}
-                        else
-                        {
-                            jumpAgain = false;
-                        }
-                        console.log(jumpAgain);
-                        if(!jumpAgain)
-                        {
-                            play1 = true;
-				            play2 = false;
-                        }
-					}
-						
-					else if(board[a][b] == 3)
+					if(eliminate1)
 					{
-						document.getElementById(tot).innerHTML="<img src= 'redking.png'/>";
-						document.getElementById(val).innerHTML="";
-						board[x][y] = 3;
-						board[a][b] = 0;
-						
-						if(eliminate1)
-						{
-							document.getElementById((x-1).toString() + (y-1).toString()).innerHTML="";
-							board[x-1][y-1] = 0;
-							pieces2 -= 1;
-							check(x,y);	
-						}
-						else if(eliminate2)
-						{
-							document.getElementById((x-1).toString() + (y+1).toString()).innerHTML="";
-							board[x-1][y+1] = 0;
-							pieces2 -= 1;
-							check(x,y);	
-						}
-						else if(eliminate3)
-						{
-							document.getElementById((x+1).toString() + (y-1).toString()).innerHTML="";
-							board[x+1][y-1] = 0;
-							pieces2 -= 1;
-							check(x,y);	
-						}
-						else if(eliminate4)
-						{
-							document.getElementById((x+1).toString() + (y+1).toString()).innerHTML="";
-							board[x+1][y+1] = 0;
-							pieces2 -= 1;
-							check(x,y);	
-						}
-                        else
-                        {
-                            jumpAgain = false;
-                        }
-                        if(!jumpAgain)
-                        {
-                            play2 = true; 
-				            play1 = false;
-                        }
+						document.getElementById((x-1).toString() + (y-1).toString()).innerHTML="";
+						board[x-1][y-1] = 0;
+						pieces1 -= 1;
+						check(x,y);	
 					}
-					val="-2";
-				}
+					else if(eliminate2)
+					{
+						document.getElementById((x-1).toString() + (y+1).toString()).innerHTML="";
+						board[x-1][y+1] = 0;
+						pieces1 -= 1;
+						check(x,y);	
+					}
+					else if(eliminate3)
+					{
+						document.getElementById((x+1).toString() + (y-1).toString()).innerHTML="";
+						board[x+1][y-1] = 0;
+						pieces1 -= 1;
+						check(x,y);	
+					}
+					else if(eliminate4)
+					{
+						document.getElementById((x+1).toString() + (y+1).toString()).innerHTML="";
+						board[x+1][y+1] = 0;
+						pieces1 -= 1;
+						check(x,y);	
+					}
+					else
+					{
+						jumpAgain = false;
+					}
+					console.log(jumpAgain);
+					if(!jumpAgain)
+					{
+						play1 = true;
+						play2 = false;
+					}
+				}			
+				else if(board[a][b] == 3)
+				{
+					document.getElementById(tot).innerHTML="<img src= 'redking.png'/>";
+					document.getElementById(val).innerHTML="";
+					board[x][y] = 3;
+					board[a][b] = 0;
 
-				else
-				{
-						
+					if(eliminate1)
+					{
+						document.getElementById((x-1).toString() + (y-1).toString()).innerHTML="";
+						board[x-1][y-1] = 0;
+						pieces2 -= 1;
+						check(x,y);	
+					}
+					else if(eliminate2)
+					{
+						document.getElementById((x-1).toString() + (y+1).toString()).innerHTML="";
+						board[x-1][y+1] = 0;
+						pieces2 -= 1;
+						check(x,y);	
+					}
+					else if(eliminate3)
+					{
+						document.getElementById((x+1).toString() + (y-1).toString()).innerHTML="";
+						board[x+1][y-1] = 0;
+						pieces2 -= 1;
+						check(x,y);	
+					}
+					else if(eliminate4)
+					{
+						document.getElementById((x+1).toString() + (y+1).toString()).innerHTML="";
+						board[x+1][y+1] = 0;
+						pieces2 -= 1;
+						check(x,y);	
+					}
+					else
+					{
+						jumpAgain = false;
+					}
+					if(!jumpAgain)
+					{
+						play2 = true; 
+						play1 = false;
+					}
 				}
-			// Reset selected space color back to gray
-			// Set val = -2 to reset selected space, retains turn		
+				val="-2";
 			}
-			else
-			{
-				if(board[a][b]==board[x][y])
-				{
-					document.getElementById(val).style.background="#DCDCDC";
-					document.getElementById(tot).style.background="black";
-					a = x;
-					b = y;
-					val = tot;
-				}
-			}
+
+		// Reset selected space color back to gray
+		// Set val = -2 to reset selected space, retains turn		
 		}
 		else
 		{
-			document.getElementById(val).style.background="#DCDCDC";
-			val = "-2";
+			if(board[a][b]==board[x][y])
+			{
+				document.getElementById(val).style.background="#DCDCDC";
+				document.getElementById(tot).style.background="black";
+				a = x;
+				b = y;
+				val = tot;
+			}
 		}
-		
-		if(pieces1 !== 0 && pieces2 !== 0)
-		{
-			if(play1)
-			{
-				document.getElementById("here").innerHTML=player1+"'s turn";
-			}
-			else if(play2)
-			{
-				document.getElementById("here").innerHTML=player2+"'s turn";
-			}	
-        }
-		else
-		{
-			won();
-		}
-			block();
-			var blocktemp1=blocked1.every(Boolean);
-			var blocktemp2=blocked2.every(Boolean);
-			if(blocktemp1)
-			{
-				document.getElementById("here").innerHTML=player1+" Won"+"</br><button onclick='newgame()'>Play Again?</button>";
-				play1=false;
-				play2=false;
-				
-			}
-			else if(blocktemp2)
-			{
-				document.getElementById("here").innerHTML=player2+" Won"+"</br><button onclick='newgame()'>Play Again?</button>";
-				play2=false;
-				play1=false;
-			}
 	}
+	else
+	{
+		document.getElementById(val).style.background="#DCDCDC";
+		val = "-2";
+	}
+	
+	if(pieces1 !== 0 && pieces2 !== 0)
+	{
+		if(play1)
+		{
+			document.getElementById("here").innerHTML=player1+"'s turn";
+		}
+		else if(play2)
+		{
+			document.getElementById("here").innerHTML=player2+"'s turn";
+		}
+	else
+	{
+		won();
+	}
+	block();
+	var blocktemp1=blocked1.every(Boolean);
+	var blocktemp2=blocked2.every(Boolean);
+	if(blocktemp1)
+	{
+		document.getElementById("here").innerHTML=player1+" Won"+"</br><button onclick='newgame()'>Play Again?</button>";
+		play1=false;
+		play2=false;			
+	}
+	else if(blocktemp2)
+	{
+		document.getElementById("here").innerHTML=player2+" Won"+"</br><button onclick='newgame()'>Play Again?</button>";
+		play2=false;
+		play1=false;
+	}
+}
 		
 function check(x,y)
 {
     //console.log("Space: " + board[x][y] + "x: " + x + "y: " + y);
-				if(x <= 5 && board[x][y] == 1 && (SouthPieceCheck(x, y, -1, 2)))
-				{
-                    //console.log("red 1");
-					a = x;
-					b = y;
-					val = x.toString() + y.toString();
-                    //console.log("red 2");
-					jumpAgain = true;
-				}
-				else if(x >= 2 && board[x][y] == -1 && (NorthPieceCheck(x, y, 1, 3)))
-				{
-                    //console.log("blue 1");
-					a = x;
-					b = y;
-					val = x.toString() + y.toString();
-                    //console.log("blue 2");
-					jumpAgain = true;
-				}
-				else if(board[x][y] == 3 &&(NorthPieceCheck(x, y, -1, 2) || SouthPieceCheck(x, y, -1, 2)))
-                {
-                    //console.log("redking 1");
-                    a = x;
-                    b = y;
-                    val = x.toString() + y.toString();
-                    //console.log("redking 2");
-                    jumpAgain = true;
-				}
-				else if(board[x][y] == 2 && (NorthPieceCheck(x, y, 1, 3) || SouthPieceCheck(x, y, 1, 3)))
-                {
-                    //console.log("blueking 1");
-                    a = x;
-                    b = y;
-                    val = x.toString() + y.toString();
-                    //console.log("blueking 2");
-                    jumpAgain = true;
-				}
-                else
-                {
-                    //console.log("rwes");
-                    jumpAgain = false;
-                }
+	if(x <= 5 && board[x][y] == 1 && (SouthPieceCheck(x, y, -1, 2))){
+                //console.log("red 1");
+		a = x;
+		b = y;
+		val = x.toString() + y.toString();
+                //console.log("red 2");
+		jumpAgain = true;
 	}
+	else if(x >= 2 && board[x][y] == -1 && (NorthPieceCheck(x, y, 1, 3))){
+                //console.log("blue 1");
+		a = x;
+		b = y;
+		val = x.toString() + y.toString();
+                //console.log("blue 2");
+		jumpAgain = true;
+	}
+	else if(board[x][y] == 3 &&(NorthPieceCheck(x, y, -1, 2) || SouthPieceCheck(x, y, -1, 2)))
+        {
+                //console.log("redking 1");
+                a = x;
+                b = y;
+                val = x.toString() + y.toString();
+                //console.log("redking 2");
+                jumpAgain = true;
+	}
+	else if(board[x][y] == 2 && (NorthPieceCheck(x, y, 1, 3) || SouthPieceCheck(x, y, 1, 3)))
+        {
+                //console.log("blueking 1");
+                a = x;
+                b = y;
+                val = x.toString() + y.toString();
+                //console.log("blueking 2");
+                jumpAgain = true;
+	}
+        else
+        {
+                //console.log("rwes");
+                jumpAgain = false;
+        }
+}
 
 
     function NorthPieceCheck(x, y, basicPiece, kingPiece)
