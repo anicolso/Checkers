@@ -1,2 +1,2 @@
 # Checkers
-Checkers Game
+Checkers Game created for JavaScript/AJAX course
